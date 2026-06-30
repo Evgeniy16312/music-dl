@@ -15,7 +15,7 @@ CLI для скачивания альбомов, плейлистов и тре
 ## Содержание
 
 - [Возможности](#возможности)
-- [Установка](#установка)
+- [Установка для пользователей](#установка-для-пользователей)
 - [Быстрый старт](#быстрый-старт)
 - [Быстро: только ссылка (ym.ps1)](#быстро-только-ссылка-ymps1)
 - [Авторизация](#авторизация)
@@ -26,6 +26,7 @@ CLI для скачивания альбомов, плейлистов и тре
 - [Структура файлов](#структура-файлов-на-диске)
 - [Архитектура](#архитектура-проекта)
 - [GitHub и разработка](#github-и-разработка)
+- [Частые проблемы](#частые-проблемы)
 - [Disclaimer](#disclaimer)
 
 ---
@@ -43,24 +44,87 @@ CLI для скачивания альбомов, плейлистов и тре
 
 ---
 
-## Установка
+## Установка для пользователей
 
-### С GitHub
+Любой может скачать проект с GitHub и начать пользоваться за **5 минут**.
+
+### Что нужно заранее
+
+| Требование | Где взять |
+|------------|-----------|
+| **Python 3.10+** | [python.org/downloads](https://www.python.org/downloads/) — при установке отметь **Add python.exe to PATH** |
+| **Git** (способ 1) | [git-scm.com](https://git-scm.com/download/win) |
+| **Аккаунт Яндекс.Музыки** | [music.yandex.ru](https://music.yandex.ru) (желательно с подпиской) |
+
+---
+
+### Способ 1 — Git clone + установщик (рекомендуется для Windows)
 
 ```powershell
 git clone https://github.com/Evgeniy16312/music-dl.git
 cd music-dl
-pip install -r requirements.txt
+powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
-### Установка как пакета (команда `music-dl`)
+Скрипт `install.ps1` установит зависимости и команду `music-dl`.
+
+---
+
+### Способ 2 — Скачать ZIP (без Git)
+
+1. Открой [github.com/Evgeniy16312/music-dl](https://github.com/Evgeniy16312/music-dl)
+2. **Code** → **Download ZIP**
+3. Распакуй архив, открой PowerShell в папке `music-dl`:
 
 ```powershell
-pip install -e .
-music-dl --help
+powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
-Файлы по умолчанию: `%USERPROFILE%\Music\YandexMusic\`
+---
+
+### Способ 3 — pip из GitHub (команда из любой папки)
+
+Нужны Python и Git:
+
+```powershell
+pip install "git+https://github.com/Evgeniy16312/music-dl.git"
+music-dl --help
+music-dl auth
+music-dl "https://music.yandex.ru/album/12345"
+```
+
+> Обёртки `ym.ps1` / `ym.cmd` доступны только при способах 1 и 2 (полная папка проекта).
+
+---
+
+### Первый запуск (для всех способов)
+
+```powershell
+# Шаг 1 — авторизация (один раз)
+python ym_download.py auth
+# или:  music-dl auth
+
+# Шаг 2 — скачать музыку
+python ym_download.py "https://music.yandex.ru/album/12345"
+# или:  .\ym.ps1   (если ссылка в буфере обмена)
+```
+
+Музыка сохраняется в: `%USERPROFILE%\Music\YandexMusic\`
+
+---
+
+### Поделиться с другом — короткая инструкция
+
+Отправь ему ссылку на репозиторий и этот блок:
+
+```
+1. Установи Python 3.10+ (с галочкой Add to PATH)
+2. git clone https://github.com/Evgeniy16312/music-dl.git
+3. cd music-dl
+4. powershell -ExecutionPolicy Bypass -File .\install.ps1
+5. python ym_download.py auth
+6. .\ym.ps1  (скопируй ссылку из Яндекс.Музыки в буфер)
+```
 
 ---
 
@@ -354,11 +418,27 @@ git push
 |--------------|------------|
 | `music_dl/` | Основной код |
 | `ym_download.py` | Точка входа |
-| `ym.ps1`, `ym.cmd` | Обёртки для Windows |
+| `install.ps1` | Автоустановка зависимостей |
+| `ym.ps1`, `ym.cmd` | Скачать по ссылке из буфера |
 | `requirements.txt` | Зависимости |
 | `pyproject.toml` | Метаданные пакета, `pip install -e .` |
 | `LICENSE` | MIT |
 | `.cursor/rules/` | Правила архитектуры для Cursor |
+
+---
+
+## Частые проблемы
+
+| Проблема | Решение |
+|----------|---------|
+| `python` не найден | Переустанови Python с галочкой **Add to PATH**, перезапусти терминал |
+| Вставил URL в терминал — ошибка | Используй `.\ym.ps1 "URL"` или `python ym_download.py "URL"` |
+| `ym.ps1` не запускается | `powershell -ExecutionPolicy Bypass -File .\ym.ps1` |
+| «Не удалось разобрать цель» | Скопируй ссылку из **адресной строки** браузера; для альбома нужен `/album/` |
+| Скачиваются все альбомы артиста | Ты дал `/artist/ID` — нужен `/album/ID` или `/artist/ID/tracks` |
+| Ctrl+C не останавливает | Нажми **Ctrl+C дважды** или `--workers 1` |
+| «Нужен токен» | Выполни `python ym_download.py auth` |
+| Ошибки `tags` в логе | Файл скачан; обнови проект: `git pull` |
 
 ---
 
