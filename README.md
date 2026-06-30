@@ -5,7 +5,7 @@
 CLI для скачивания альбомов, плейлистов и треков из **Яндекс.Музыки** в MP3/AAC.
 
 - **Репозиторий:** [github.com/Evgeniy16312/music-dl](https://github.com/Evgeniy16312/music-dl)
-- **План развития:** [docs/ROADMAP.md](docs/ROADMAP.md) — GUI, VK Music, новые сервисы
+- **План развития:** [docs/ROADMAP.md](docs/ROADMAP.md) — VK Music, GUI Win/Mac, сайт, бэкенд, Android/iOS
 - **API:** [yandex-music](https://github.com/MarshalX/yandex-music-api)
 - **Лицензия:** MIT
 
