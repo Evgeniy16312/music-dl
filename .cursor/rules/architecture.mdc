@@ -1,0 +1,33 @@
+---
+description: Architecture and module layout for music_dl
+globs: music_dl/**/*.py
+alwaysApply: false
+---
+
+# Architecture
+
+## Layers
+
+1. **cli/** — argparse, commands, user I/O only
+2. **core/** — domain models, config, shared utilities (provider-agnostic)
+3. **providers/** — one subpackage per streaming service (`yandex/`, future `spotify/`)
+4. **pipeline/** — download orchestration (jobs, runner, tags, failed log)
+
+## Adding a new provider
+
+1. Create `music_dl/providers/<name>/` with:
+   - `patterns.py` — URL regexes
+   - `targets.py` — `can_parse()`, `parse()`
+   - `auth.py` — tokens
+   - `loaders.py` — API → `TrackCollection`
+   - `track_download.py` — single-track download + worker
+   - `provider.py` — class implementing `MusicProvider`
+2. Register in `providers/registry.py` via `register_provider()`
+3. Extend `pipeline/jobs.py` if the provider needs custom job building
+
+## Rules
+
+- **No yandex imports in `core/` or `cli/`** — only in `providers/yandex/` and `pipeline/` adapters
+- **Commands stay thin** — delegate to provider + pipeline
+- **Shared types** live in `core/models.py`: `ParsedTarget`, `TrackCollection`, `DownloadOptions`
+- **Entry points**: `ym_download.py` (compat) and `python -m music_dl`

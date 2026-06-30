@@ -1,0 +1,39 @@
+[project]
+name = "music-dl"
+version = "2.0.0"
+description = "CLI для скачивания музыки из Яндекс.Музыки (расширяемая архитектура провайдеров)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "turin" }]
+keywords = ["yandex-music", "downloader", "cli", "mp3"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio",
+]
+
+dependencies = [
+    "yandex-music>=3.0.0",
+    "rich>=13.0.0",
+    "mutagen>=1.47.0",
+]
+
+[project.scripts]
+music-dl = "music_dl.cli.main:main"
+
+[project.urls]
+Repository = "https://github.com/Evgeniy16312/music-dl"
+Issues = "https://github.com/Evgeniy16312/music-dl/issues"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["music_dl*"]

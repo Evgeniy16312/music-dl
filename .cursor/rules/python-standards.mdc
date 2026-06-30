@@ -1,0 +1,26 @@
+---
+description: Python coding standards for this project
+globs: **/*.py
+alwaysApply: false
+---
+
+# Python Standards
+
+- Use `from __future__ import annotations` in new modules
+- Prefer `@dataclass` for config/DTO types; `Protocol` for provider interfaces
+- Raise `SystemExit` with clear Russian messages for user-facing CLI errors
+- Use `pathlib.Path`, not string paths
+- Keep functions focused; one module ≈ one responsibility
+- Provider-specific code must not leak into CLI — use registry + `MusicProvider`
+- Console output via `music_dl.console.console` (Rich), not bare `print`
+- Cancellation: call `raise_if_cancelled()` in long loops; never swallow `KeyboardInterrupt`
+
+```python
+# ✅ Provider implements protocol, registered once
+class SpotifyProvider:
+    name = "spotify"
+    def can_parse(self, url: str) -> bool: ...
+    def download_target(self, client, token, target, opts) -> DownloadStats: ...
+
+# ❌ Giant if/elif on URL host inside cmd_download
+```
